@@ -263,8 +263,9 @@ button:active {
 
 /* Media Query: Large Smartphone (Vertical) */
 @media screen and (max-width: 500px) {
-  .game-container {
-    width: 100%;
+  .game-container,
+  .selected-item {
+    width: 95%;
     margin-top: 0;
     border: none;
   }
@@ -308,5 +309,9 @@ button:active {
 @media screen and (max-width: 376px) {
   .best-score {
     left: 232px;
+  }
+  body,
+  .header {
+    font-size: 0.85rem;
   }
 }
