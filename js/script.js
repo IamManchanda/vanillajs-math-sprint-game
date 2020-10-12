@@ -34,6 +34,11 @@ function shuffle(array) {
   return array;
 }
 
+function showGamePage() {
+  gamePage.hidden = false;
+  countdownPage.hidden = true;
+}
+
 function getRandomNumber(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
@@ -63,14 +68,24 @@ function createEquations() {
   }
   shuffle(equationsArray);
   console.log({
-    questionAmount,
     correctEquations,
+    questionAmount,
     wrongEquations,
     equationsArray,
   });
 }
 
-/* 
+function equationsToDOM() {
+  equationsArray.forEach((equation) => {
+    const item = document.createElement("div");
+    item.classList.add("item");
+    const equationsText = document.createElement("h1");
+    equationsText.textContent = equation.value;
+    item.appendChild(equationsText);
+    itemContainer.appendChild(item);
+  });
+}
+
 function populateGamePage() {
   itemContainer.textContent = "";
   const topSpacer = document.createElement("div");
@@ -78,11 +93,12 @@ function populateGamePage() {
   const selectedItem = document.createElement("div");
   selectedItem.classList.add("selected-item");
   itemContainer.append(topSpacer, selectedItem);
+  createEquations();
+  equationsToDOM();
   const bottomSpacer = document.createElement("div");
   bottomSpacer.classList.add("height-500");
   itemContainer.appendChild(bottomSpacer);
 }
-*/
 
 function countdownStart() {
   countdown.textContent = "3";
@@ -101,7 +117,9 @@ function showCountdown() {
   countdownPage.hidden = false;
   splashPage.hidden = true;
   countdownStart();
-  createEquations();
+  populateGamePage();
+  // Change the timeout value in production to 4000
+  setTimeout(showGamePage, 400);
 }
 
 function getRadioValue() {
