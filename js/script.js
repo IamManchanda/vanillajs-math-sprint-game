@@ -22,7 +22,40 @@ let firstNumber = 0;
 let secondNumber = 0;
 let equationObject = {};
 const wrongFormat = [];
+let timer;
+let timePlayed = 0;
+let baseTime = 0;
+let penaltyTime = 0;
+let finalTime = 0;
+let finalTimeDisplay = "0.0s";
 let valueY = 0;
+
+function checkTime() {
+  if (playerGuessArray.length === questionAmount) {
+    clearInterval(timer);
+    equationsArray.forEach((equation, index) => {
+      if (equation.evaluated === playerGuessArray[index]) {
+      } else {
+        penaltyTime += 0.5;
+      }
+    });
+    finalTime = timePlayed + penaltyTime;
+    console.log({ timePlayed, penaltyTime, finalTime });
+  }
+}
+
+function addTime() {
+  timePlayed += 0.1;
+  checkTime();
+}
+
+function startTimer() {
+  timePlayed = 0;
+  penaltyTime = 0;
+  finalTime = 0;
+  timer = setInterval(addTime, 100);
+  gamePage.removeEventListener("click", startTimer);
+}
 
 function shuffle(array) {
   let currentIndex = array.length;
@@ -39,7 +72,6 @@ function shuffle(array) {
 }
 
 function storeUserSelection(guessedTrue) {
-  console.log(playerGuessArray);
   valueY += 80;
   itemContainer.scroll(0, valueY);
   return playerGuessArray.push(String(guessedTrue));
@@ -149,9 +181,9 @@ function selectQuestion() {
 
 function selectQuestionAmount(event) {
   event.preventDefault();
-  questionAmount = getRadioValue();
-  if (questionAmount) {
-    questionAmount = Number(questionAmount);
+  const questionAmountStr = getRadioValue();
+  if (questionAmountStr) {
+    questionAmount = Number(questionAmountStr);
     showCountdown();
   }
 }
@@ -164,3 +196,4 @@ wrongButton.addEventListener("click", () => {
 rightButton.addEventListener("click", () => {
   storeUserSelection(true);
 });
+gamePage.addEventListener("click", startTimer);
