@@ -20,32 +20,55 @@ let secondNumber = 0;
 let equationObject = {};
 const wrongFormat = [];
 
-/* 
+function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+function getRandomNumber(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 function createEquations() {
-  const correctEquations = null;
-  const wrongEquations = null;
+  const correctEquations = getRandomNumber(questionAmount);
+  const wrongEquations = questionAmount - correctEquations;
   for (let i = 0; i < correctEquations; i++) {
-    firstNumber = null;
-    secondNumber = null;
+    firstNumber = getRandomNumber(9);
+    secondNumber = getRandomNumber(9);
     const equationValue = firstNumber * secondNumber;
     const equation = `${firstNumber} x ${secondNumber} = ${equationValue}`;
     equationObject = { value: equation, evaluated: "true" };
     equationsArray.push(equationObject);
   }
   for (let i = 0; i < wrongEquations; i++) {
-    firstNumber = null;
-    secondNumber = null;
+    firstNumber = getRandomNumber(9);
+    secondNumber = getRandomNumber(9);
     const equationValue = firstNumber * secondNumber;
     wrongFormat[0] = `${firstNumber} x ${secondNumber + 1} = ${equationValue}`;
     wrongFormat[1] = `${firstNumber} x ${secondNumber} = ${equationValue - 1}`;
     wrongFormat[2] = `${firstNumber + 1} x ${secondNumber} = ${equationValue}`;
-    const formatChoice = null;
+    const formatChoice = getRandomNumber(3);
     const equation = wrongFormat[formatChoice];
     equationObject = { value: equation, evaluated: "false" };
     equationsArray.push(equationObject);
   }
+  shuffle(equationsArray);
+  console.log({
+    questionAmount,
+    correctEquations,
+    wrongEquations,
+    equationsArray,
+  });
 }
-*/
 
 /* 
 function populateGamePage() {
@@ -78,6 +101,7 @@ function showCountdown() {
   countdownPage.hidden = false;
   splashPage.hidden = true;
   countdownStart();
+  createEquations();
 }
 
 function getRadioValue() {
@@ -102,8 +126,8 @@ function selectQuestion() {
 function selectQuestionAmount(event) {
   event.preventDefault();
   questionAmount = getRadioValue();
-  console.log({ questionAmount });
   if (questionAmount) {
+    questionAmount = Number(questionAmount);
     showCountdown();
   }
 }
