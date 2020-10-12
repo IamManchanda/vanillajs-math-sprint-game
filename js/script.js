@@ -205,16 +205,19 @@ function populateGamePage() {
 }
 
 function countdownStart() {
-  countdown.textContent = "3";
-  setTimeout(() => {
-    countdown.textContent = "2";
+  let countdownValue = 3;
+  countdown.textContent = countdownValue;
+  const countdownTime = setInterval(() => {
+    countdownValue -= 1;
+    if (countdownValue === 0) {
+      countdown.textContent = "GO!";
+    } else if (countdownValue === -1) {
+      showGamePage();
+      clearInterval(countdownTime);
+    } else {
+      countdown.textContent = countdownValue;
+    }
   }, 1000);
-  setTimeout(() => {
-    countdown.textContent = "1";
-  }, 2000);
-  setTimeout(() => {
-    countdown.textContent = "GO!";
-  }, 3000);
 }
 
 function showCountdown() {
@@ -222,7 +225,6 @@ function showCountdown() {
   splashPage.hidden = true;
   countdownStart();
   populateGamePage();
-  setTimeout(showGamePage, 4000);
 }
 
 function getRadioValue() {
