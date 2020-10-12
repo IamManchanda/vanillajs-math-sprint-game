@@ -176,7 +176,6 @@ function createEquations() {
     equationsArray.push(equationObject);
   }
   shuffle(equationsArray);
-  console.log({ equationsArray });
 }
 
 function equationsToDOM() {
@@ -223,8 +222,8 @@ function countdownStart() {
 function showCountdown() {
   countdownPage.hidden = false;
   splashPage.hidden = true;
-  countdownStart();
   populateGamePage();
+  countdownStart();
 }
 
 function getRadioValue() {
