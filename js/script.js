@@ -5,6 +5,7 @@ const countdownPage = document.getElementById("countdown-page");
 const startForm = document.getElementById("start-form");
 const wrongButton = document.getElementById("wrong-button");
 const rightButton = document.getElementById("right-button");
+const playAgainBtn = document.getElementById("play-again");
 const radioContainers = document.querySelectorAll(".radio-container");
 const radioInputs = document.querySelectorAll("input");
 const bestScores = document.querySelectorAll(".best-score-value");
@@ -13,7 +14,6 @@ const itemContainer = document.querySelector(".item-container");
 const finalTimeEl = document.querySelector(".final-time");
 const baseTimeEl = document.querySelector(".base-time");
 const penaltyTimeEl = document.querySelector(".penalty-time");
-const playAgainBtn = document.querySelector(".play-again");
 
 let questionAmount = 0;
 let equationsArray = [];
@@ -30,6 +30,52 @@ let finalTime = 0;
 let finalTimeDisplay = "0.0s";
 let valueY = 0;
 
+function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+function playAgain() {
+  gamePage.addEventListener("click", startTimer);
+  scorePage.hidden = true;
+  splashPage.hidden = false;
+  equationsArray = [];
+  playerGuessArray = [];
+  valueY = 0;
+  playAgainBtn.hidden = true;
+}
+
+function showScorePage() {
+  setTimeout(() => {
+    playAgainBtn.hidden = false;
+  }, 1000);
+  gamePage.hidden = true;
+  scorePage.hidden = false;
+}
+
+function scoresToDOM() {
+  finalTimeDisplay = finalTime.toFixed(1);
+  baseTime = timePlayed.toFixed(1);
+  penaltyTime = penaltyTime.toFixed(1);
+  finalTimeEl.textContent = `${finalTimeDisplay}s`;
+  baseTimeEl.textContent = `Base Time: ${baseTime}s`;
+  penaltyTimeEl.textContent = `Penalty: +${penaltyTime}s`;
+  itemContainer.scrollTo({
+    top: 0,
+    behavior: "instant",
+  });
+  showScorePage();
+}
+
 function checkTime() {
   if (playerGuessArray.length === questionAmount) {
     clearInterval(timer);
@@ -40,7 +86,7 @@ function checkTime() {
       }
     });
     finalTime = timePlayed + penaltyTime;
-    console.log({ timePlayed, penaltyTime, finalTime });
+    scoresToDOM();
   }
 }
 
@@ -55,20 +101,6 @@ function startTimer() {
   finalTime = 0;
   timer = setInterval(addTime, 100);
   gamePage.removeEventListener("click", startTimer);
-}
-
-function shuffle(array) {
-  let currentIndex = array.length;
-  let temporaryValue;
-  let randomIndex;
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-  return array;
 }
 
 function storeUserSelection(guessedTrue) {
@@ -197,3 +229,4 @@ rightButton.addEventListener("click", () => {
   storeUserSelection(true);
 });
 gamePage.addEventListener("click", startTimer);
+playAgainBtn.addEventListener("click", playAgain);
