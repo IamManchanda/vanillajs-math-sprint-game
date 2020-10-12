@@ -3,6 +3,8 @@ const scorePage = document.getElementById("score-page");
 const splashPage = document.getElementById("splash-page");
 const countdownPage = document.getElementById("countdown-page");
 const startForm = document.getElementById("start-form");
+const wrongButton = document.getElementById("wrong-button");
+const rightButton = document.getElementById("right-button");
 const radioContainers = document.querySelectorAll(".radio-container");
 const radioInputs = document.querySelectorAll("input");
 const bestScores = document.querySelectorAll(".best-score-value");
@@ -15,10 +17,12 @@ const playAgainBtn = document.querySelector(".play-again");
 
 let questionAmount = 0;
 let equationsArray = [];
+let playerGuessArray = [];
 let firstNumber = 0;
 let secondNumber = 0;
 let equationObject = {};
 const wrongFormat = [];
+let valueY = 0;
 
 function shuffle(array) {
   let currentIndex = array.length;
@@ -32,6 +36,13 @@ function shuffle(array) {
     array[randomIndex] = temporaryValue;
   }
   return array;
+}
+
+function storeUserSelection(guessedTrue) {
+  console.log(playerGuessArray);
+  valueY += 80;
+  itemContainer.scroll(0, valueY);
+  return playerGuessArray.push(String(guessedTrue));
 }
 
 function showGamePage() {
@@ -67,12 +78,7 @@ function createEquations() {
     equationsArray.push(equationObject);
   }
   shuffle(equationsArray);
-  console.log({
-    correctEquations,
-    questionAmount,
-    wrongEquations,
-    equationsArray,
-  });
+  console.log({ equationsArray });
 }
 
 function equationsToDOM() {
@@ -152,3 +158,9 @@ function selectQuestionAmount(event) {
 
 startForm.addEventListener("click", selectQuestion);
 startForm.addEventListener("submit", selectQuestionAmount);
+wrongButton.addEventListener("click", () => {
+  storeUserSelection(false);
+});
+rightButton.addEventListener("click", () => {
+  storeUserSelection(true);
+});
