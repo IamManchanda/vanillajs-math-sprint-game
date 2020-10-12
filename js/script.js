@@ -18,6 +18,7 @@ const penaltyTimeEl = document.querySelector(".penalty-time");
 let questionAmount = 0;
 let equationsArray = [];
 let playerGuessArray = [];
+let bestScoreArray = [];
 let firstNumber = 0;
 let secondNumber = 0;
 let equationObject = {};
@@ -27,7 +28,7 @@ let timePlayed = 0;
 let baseTime = 0;
 let penaltyTime = 0;
 let finalTime = 0;
-let finalTimeDisplay = "0.0s";
+let finalTimeDisplay = "0.0";
 let valueY = 0;
 
 function shuffle(array) {
@@ -42,6 +43,41 @@ function shuffle(array) {
     array[randomIndex] = temporaryValue;
   }
   return array;
+}
+
+function bestScoresToDOM() {
+  bestScores.forEach((bestScore, index) => {
+    const bestScoreEl = bestScore;
+    bestScoreEl.textContent = `${bestScoreArray[index].bestScore}s`;
+  });
+}
+
+function getSavedBestScores() {
+  if (localStorage.getItem("bestScores")) {
+    bestScoreArray = JSON.parse(localStorage.bestScores);
+  } else {
+    bestScoreArray = [
+      { questions: 10, bestScore: finalTimeDisplay },
+      { questions: 25, bestScore: finalTimeDisplay },
+      { questions: 50, bestScore: finalTimeDisplay },
+      { questions: 99, bestScore: finalTimeDisplay },
+    ];
+    localStorage.setItem("bestScores", JSON.stringify(bestScoreArray));
+  }
+  bestScoresToDOM();
+}
+
+function updateBestScore() {
+  bestScoreArray.forEach((score, index) => {
+    if (questionAmount === score.questions) {
+      const savedBestScore = Number(bestScoreArray[index].bestScore);
+      if (savedBestScore === 0 || savedBestScore > finalTime) {
+        bestScoreArray[index].bestScore = finalTimeDisplay;
+      }
+    }
+  });
+  bestScoresToDOM();
+  localStorage.setItem("bestScores", JSON.stringify(bestScoreArray));
 }
 
 function playAgain() {
@@ -69,10 +105,8 @@ function scoresToDOM() {
   finalTimeEl.textContent = `${finalTimeDisplay}s`;
   baseTimeEl.textContent = `Base Time: ${baseTime}s`;
   penaltyTimeEl.textContent = `Penalty: +${penaltyTime}s`;
-  itemContainer.scrollTo({
-    top: 0,
-    behavior: "instant",
-  });
+  updateBestScore();
+  itemContainer.scrollTo({ top: 0, behavior: "instant" });
   showScorePage();
 }
 
@@ -188,8 +222,7 @@ function showCountdown() {
   splashPage.hidden = true;
   countdownStart();
   populateGamePage();
-  // Change the timeout value in production to 4000
-  setTimeout(showGamePage, 400);
+  setTimeout(showGamePage, 4000);
 }
 
 function getRadioValue() {
@@ -230,3 +263,5 @@ rightButton.addEventListener("click", () => {
 });
 gamePage.addEventListener("click", startTimer);
 playAgainBtn.addEventListener("click", playAgain);
+
+getSavedBestScores();
