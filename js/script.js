@@ -13,6 +13,7 @@ const baseTimeEl = document.querySelector(".base-time");
 const penaltyTimeEl = document.querySelector(".penalty-time");
 const playAgainBtn = document.querySelector(".play-again");
 
+let questionAmount = 0;
 let equationsArray = [];
 let firstNumber = 0;
 let secondNumber = 0;
@@ -59,3 +60,31 @@ function populateGamePage() {
   itemContainer.appendChild(bottomSpacer);
 }
 */
+
+function getRadioValue() {
+  let radioValue;
+  radioInputs.forEach((radioInput) => {
+    if (radioInput.checked) {
+      radioValue = radioInput.value;
+    }
+  });
+  return radioValue;
+}
+
+function selectQuestion() {
+  radioContainers.forEach((radioEl) => {
+    radioEl.classList.remove("selected-label");
+    if (radioEl.children[1].checked) {
+      radioEl.classList.add("selected-label");
+    }
+  });
+}
+
+function selectQuestionAmount(event) {
+  event.preventDefault();
+  questionAmount = getRadioValue();
+  console.log({ questionAmount });
+}
+
+startForm.addEventListener("click", selectQuestion);
+startForm.addEventListener("submit", selectQuestionAmount);
